@@ -1,0 +1,59 @@
+
+from sklearn.datasets import fetch_openml
+mnist=fetch_openml('mnist_784',version=1,cache=True)
+
+x,y=mnist["data"],mnist["target"]
+print(x.shape)
+(70000, 784)
+%matplotlib inline
+x
+
+
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+some_digit=np.array(x.iloc[26000])
+some_digit_image=some_digit.reshape(28,28)
+plt.imshow(some_digit_image,cmap=matplotlib.cm.binary,interpolation="nearest")
+plt.axis("off")
+plt.show()
+
+x_train,x_test,y_train,y_test=x[:60000],x[60000:],y[:60000],y[60000:]
+print(y_train)
+
+import numpy as np
+y_train=y_train.astype(np.int8)
+print(y_train)
+
+y_train_4=(y_train==4)
+print(y_train_4)
+
+y_test_4=(y_test==4)
+print(y_test_4)
+
+from sklearn.linear_model import SGDClassifier
+sgd_clf=SGDClassifier(random_state=42)
+sgd_clf.fit(x_train,y_train_4)
+SGDClassifier(random_state=42)
+
+sgd_clf.predict([some_digit])
+
+#Measuring Accuracy Using Cross-Validation
+from sklearn.model_selection import cross_val_score
+cross_val_score(sgd_clf, x_train, y_train_4, cv=3, scoring="accuracy")
+array([0.9671 , 0.97645, 0.9687 ])
+from sklearn.model_selection import cross_val_predict
+y_train_pred = cross_val_predict(sgd_clf, x_train, y_train_4, cv=3)
+from sklearn.metrics import confusion_matrix
+confusion_matrix(y_train_4, y_train_pred)
+
+#Measuring Accuracy Using Precision and Recall 
+from sklearn.metrics import precision_score, recall_score
+precision_score(y_train_4, y_train_pred)
+0.8149175527816305
+recall_score(y_train_4, y_train_pred) 
+0.905169462512838
+# Measuring Accuracy Using F1 score.
+from sklearn.metrics import f1_score
+f1_score(y_train_4, y_train_pred)
+0.8576757764982564
