@@ -1,0 +1,48 @@
+
+from sklearn.neighbors import KNeighborsClassifier
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score,classification_report,confusion_matrix
+cars=pd.read_csv("https://raw.githubusercontent.com/lab-420/ml/main/KNN/car_evaluation.csv")
+cars.head()
+
+from sklearn.preprocessing import LabelEncoder               # another process of label encoder
+encoder=LabelEncoder()
+cars.buying=encoder.fit_transform(cars.buying)
+cars.head()
+
+cars.shape
+(1728, 7)
+cars.info()
+
+
+cars.outcome.unique()
+
+cars.buying.unique()
+array([3, 0, 2, 1])
+from sklearn.preprocessing import LabelEncoder
+X = cars.iloc[:,:-1]
+y = cars.outcome
+enc = LabelEncoder()
+X.buying= enc.fit_transform(X.buying)
+X.maint =enc.fit_transform(X.maint)
+X.lug_boot =enc.fit_transform(X.lug_boot)
+X.safety =enc.fit_transform(X.safety)
+X.head()
+
+X.buying.unique() #array(['vhigh', 'high', 'med', 'low'] -> ascending order
+array([3, 0, 2, 1])
+X_train,X_test,y_train,y_test = train_test_split(X,y)
+model = KNeighborsClassifier()
+model.fit(X_train,y_train)
+y_predict = model.predict(X_test)
+#y_predict
+accuracy_score(y_test,y_predict)
+0.9236111111111112
+print(classification_report(y_test,y_predict))
+
+
+confusion_matrix(y_test,y_predict) # acc,good,unacc,vgood
+
+cars.outcome.unique()
+array(['unacc', 'acc', 'vgood', 'good'], dtype=object)
