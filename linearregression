@@ -1,0 +1,99 @@
+
+# define lib's
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+df=pd.read_csv("https://raw.githubusercontent.com/lab-420/ml/main/LinearRegression/hp_data.csv")
+df
+
+df.head()
+df.shape
+(3500, 10)
+df.info()
+
+df.corr()
+<ipython-input-6-2f6f6606aa2c>:1: FutureWarning: The default value of numeric_only in DataFrame.corr is deprecated. In a future version, it will default to False. Select only valid columns or specify the value of numeric_only to silence this warning.
+  df.corr()
+
+df.corrwith(df.price)
+
+sns.heatmap(df.corr(),annot=True)
+
+X = df.loc[:,['sqft','totalFloor','bhk']]
+y = df[['price']]
+#split the data to train and test model
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.05)
+X_train.shape
+(3325, 3)
+X_train
+
+y_train.shape
+(3325, 1)
+y_train
+
+X_test.shape
+(175, 3)
+X_test
+sqft	totalFloor	bhk
+2954	1019	5	2
+2846	1784	18	18
+141	1100	4	3
+1823	1200	4	1
+1149	1100	4	3
+...	...	...	...
+2919	2190	5	3
+1095	1200	4	1
+3117	1100	4	3
+1550	1672	10	6
+1817	1784	18	18
+175 rows × 3 columns
+
+y_test.shape
+(175, 1)
+y_test
+price
+2954	3800000
+2846	7900000
+141	4900000
+1823	4800000
+1149	4900000
+...	...
+2919	11500000
+1095	4800000
+3117	4900000
+1550	15000000
+1817	7900000
+175 rows × 1 columns
+
+# define model
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model
+LinearRegression()
+In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook.
+On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.
+model.fit(X_train,y_train)
+model
+LinearRegression()
+In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook.
+On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.
+predict=model.predict(X_test)
+
+from sklearn.metrics import r2_score,mean_absolute_error,mean_squared_error
+r2_score(y_test,predict)
+0.8097552366621703
+predict,y_test
+
+ [175 rows x 1 columns])
+model.predict([[1000,5,2]])
+
+#plt.scatter(X_test,y_test,color='red')
+plt.scatter(y_test,predict,color="green")
+<matplotlib.collections.PathCollection at 0x7fa56c3f2aa0>
+
+mean_absolute_error(y_test,predict)
+1610561.1470471723
+mean_squared_error(y_test,predict)
+4236429847319.1543
